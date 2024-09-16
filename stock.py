@@ -41,9 +41,8 @@ elif models == 'Linear Regression':
     model = joblib.load('lr.pkl')
 else:
     model = AutoARIMA(start_p=1, start_q=1, start_P=1, start_Q=1, random_state=42)
-    model.fit(target)
-
-
+    
+model.fit(target)
 
 # Plot past data and forecast
 days = st.slider('Pick how many past days to view from last year', min_value=1, max_value=365, value=30)
