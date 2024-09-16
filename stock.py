@@ -77,7 +77,7 @@ try:
     predx = model.predict(forecast)
 
     # Plot past data and forecast
-    st.header(f"Chart of {stock}'s past {days}-days price and {forecast}-day forecast")
+    st.subheader(f"Chart of {stock}'s past {days}-days price and {forecast}-day forecast")
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=target[-days:].pd_dataframe().index, y=target[-days:].pd_dataframe().Close, name=f'Past {days} days'))
     fig.add_trace(go.Scatter(x=predx.pd_dataframe().index, y=predx.pd_dataframe().Close, name=f'{forecast} day forecast'))
