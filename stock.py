@@ -34,7 +34,7 @@ models = st.sidebar.selectbox('Choose from the following models', ('XGBoost (def
 if models == 'XGBoost (default)':
     model = joblib.load('xgb.pkl')
 elif models == 'Random Forest':
-    model = joblib.load('rf.pkl')
+    model = RandomForest(lags=7, output_chunk_length=4, n_jobs=-1, random_state=42)
 elif models == 'LightGBM':
     model = joblib.load('lgb.pkl')
 elif models == 'Linear Regression':
