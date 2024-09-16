@@ -41,8 +41,8 @@ elif models == 'Linear Regression':
     model = joblib.load('lr.pkl')
 else:
     model = AutoARIMA(start_p=1, start_q=1, start_P=1, start_Q=1, random_state=42)
+    model.fit(target)
 
-model.fit(target)
 
 
 # Plot past data and forecast
