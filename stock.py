@@ -30,38 +30,33 @@ target = fillna.transform(data)
 st.sidebar.title('Pick Machine Learning Model')
 st.sidebar.write('For advanced users, pick from the following ML models or SARIMA')
 
-# Caching the model training process
-@st.cache_resource
-def load_model(model_name):
-    if model_name == 'XGBoost (default)':
-        model = XGBModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
-    elif model_name == 'Random Forest':
-        model = RandomForest(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
-    elif model_name == 'LightGBM':
-        model = LightGBMModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
-    elif model_name == 'Linear Regression':
-        model = LinearRegressionModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
-    else:
-        model = AutoARIMA(start_p=1, start_q=1, start_P=1, start_Q=1, random_state=42)
-    
-    # Fit the model (caching fitted model)
-    model.fit(target)
-    return model
+
+if model_name == 'XGBoost (default)':
+    model = XGBModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
+elif model_name == 'Random Forest':
+    model = RandomForest(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
+elif model_name == 'LightGBM':
+    model = LightGBMModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
+elif model_name == 'Linear Regression':
+    model = LinearRegressionModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
+else:
+    model = AutoARIMA(start_p=1, start_q=1, start_P=1, start_Q=1, random_state=42)
+
+# Fit the model (caching fitted model)
+model.fit(target)
 
 # Sidebar to select model
 models = st.sidebar.selectbox(
     'Choose from the following models', 
     ('XGBoost (default)','Random Forest',  'LightGBM', 'Linear Regression', 'SARIMA'))
 
-# Load the selected model and train
-model = load_model(models)
 
 # User inputs for past data and forecast
 days = st.slider('Pick how many past days to view from last year', min_value=1, max_value=365, value=30)
 forecast = st.slider('Pick Forecast Period (smaller will be more accurate)', min_value=1, max_value=60, value=7)
 
 # Predict future prices
-predx = model.predict(forecast)
+predx = models.predict(forecast)
 
 # Plot past data and forecast
 st.write(f"Chart of {stock}'s past {days}-days price and {forecast}-day forecast")
