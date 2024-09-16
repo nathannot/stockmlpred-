@@ -52,7 +52,7 @@ predx = model.predict(forecast)
 st.write(f"Chart of {stock}'s past {days}-days price and {forecast}-day forecast")
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=target[-days:].pd_dataframe().index, y=target[-days:].pd_dataframe().Close, name=f'Past {days} days'))
-fig.add_trace(go.Scatter(x=predx.pd_dataframe().index, y=predx.pd_dataframe().Close, name='7 day forecast'))
+fig.add_trace(go.Scatter(x=predx.pd_dataframe().index, y=predx.pd_dataframe().Close, name=f'{forecast} day forecast'))
 fig.update_layout(hovermode='x', xaxis=dict(title='Date'), yaxis=dict(title='Price'))
 st.plotly_chart(fig)
 
