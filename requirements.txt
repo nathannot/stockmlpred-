@@ -3,5 +3,5 @@ darts
 streamlit
 plotly
 numpy
-datetime
+
 yfinance
