@@ -31,7 +31,7 @@ st.sidebar.write('For advanced users, pick from the following ML models or SARIM
 
 # Model selection logic
 models = st.sidebar.selectbox('Choose from the following models', ('Random Forest (default)','XGBoost',  'LightGBM', 'Linear Regression', 'SARIMA'))
-
+st.sidebar.write('XGBoost was best model in training, but can take a while to load due to sever congestion')
 if models == 'XGBoost':
     model = joblib.load('xgb.pkl')
 elif models == 'Random Forest (default)':
