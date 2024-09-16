@@ -7,7 +7,6 @@ import pandas as pd
 import numpy as np
 import datetime
 import plotly.graph_objects as go
-import joblib
 
 st.header('Stock Price Forecast using Machine Learning')
 st.write('Select from dropdown box which stock to get forecasted prices (pick forecast period below) for these popular US and AUS stocks!')
@@ -41,7 +40,7 @@ def load_model(model_name):
     elif model_name == 'LightGBM':
         model = LightGBMModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
     elif model_name == 'Linear Regression':
-        model = joblib.load('lr.pkl')
+        model = LinearRegressionModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
     else:
         model = AutoARIMA(start_p=1, start_q=1, start_P=1, start_Q=1, random_state=42)
     
