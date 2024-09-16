@@ -1,6 +1,0 @@
-yfinance == 0.2.43
-pandas
-darts
-streamlit
-plotly
-numpy
