@@ -11,11 +11,13 @@ import plotly.graph_objects as go
 st.header('Stock Price Forecast using Machine Learning')
 st.write('Select from dropdown box which stock to get forecasted prices (pick forecast period below) for these popular US and AUS stocks!')
 
+# Select stock from dropdown
 stock = st.selectbox('Choose from the following stocks', 
     ('AAPL', 'MSFT', 'AMZN', 'GOOGL', 'NVDA', 'TSLA', 'META', 'CBA.AX', 'BHP.AX', 'CSL.AX', 'WBC.AX', 'NAB.AX'))
 
 st.write('Some machine learning models may take a while')
 
+# Get the current date
 current_date = datetime.datetime.today().date()
 
 # Load stock data from Yahoo Finance
@@ -30,9 +32,9 @@ target = fillna.transform(data)
 st.sidebar.title('Pick Machine Learning Model')
 st.sidebar.write('For advanced users, pick from the following ML models or SARIMA')
 
-# Caching the model training process
+# Caching the model training process with stock symbol as a parameter
 @st.cache_resource
-def load_model(model_name):
+def load_model(stock, model_name):
     if model_name == 'XGBoost':
         model = XGBModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
     elif model_name == 'Random Forest (default)':
@@ -54,7 +56,7 @@ models = st.sidebar.selectbox(
     ('Random Forest (default)', 'XGBoost', 'LightGBM', 'Linear Regression', 'SARIMA'))
 
 # Load the selected model and train
-model = load_model(models)
+model = load_model(stock, models)
 
 # User inputs for past data and forecast
 days = st.slider('Pick how many past days to view from last year', min_value=1, max_value=365, value=30)
