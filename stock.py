@@ -17,7 +17,8 @@ stock = st.selectbox('Choose from the following stocks', ('AAPL', 'MSFT', 'AMZN'
 st.write('Some machine learning models may take a while')
 
 with st.spinner('Loading... This may take a while'):
-    
+    import time
+    time.sleep(5) 
 current_date = datetime.datetime.today().date()
 
 
