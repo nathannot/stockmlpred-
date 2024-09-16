@@ -9,7 +9,7 @@ import datetime
 import plotly.graph_objects as go
 
 st.header('Stock Price Forecast using Machine Learning')
-st.write('Select from the dropdown box or enter your own stock code to get forecasted prices!')
+st.write('Select from the dropdown box to get forecasted prices!')
 
 st.sidebar.title('Pick the Machine Learning Model or Input Stock Code')
 # Option for predefined stocks
