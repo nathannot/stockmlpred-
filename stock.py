@@ -19,9 +19,7 @@ st.write('Some machine learning models may take a while')
 # Update the progress bar in increments
 for i in range(100):
     progress_bar.progress(i + 1)
-    # Simulate processing delay
-    import time
-    time.sleep(2)
+    
 current_date = datetime.datetime.today().date()
 
 
