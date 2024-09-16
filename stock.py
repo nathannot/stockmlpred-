@@ -30,11 +30,11 @@ st.sidebar.title('Pick Machine Learning Model')
 st.sidebar.write('For advanced users, pick from the following ML models or SARIMA')
 
 # Model selection logic
-models = st.sidebar.selectbox('Choose from the following models', ('XGBoost (default)', 'Random Forest', 'LightGBM', 'Linear Regression', 'SARIMA'))
+models = st.sidebar.selectbox('Choose from the following models', ('Random Forest (default)','XGBoost',  'LightGBM', 'Linear Regression', 'SARIMA'))
 
-if models == 'XGBoost (default)':
+if models == 'XGBoost':
     model = joblib.load('xgb.pkl')
-elif models == 'Random Forest':
+elif models == 'Random Forest (default)':
     model = RandomForest(lags=7, output_chunk_length=4, n_jobs=-1, random_state=42)
 elif models == 'LightGBM':
     model = joblib.load('lgb.pkl')
