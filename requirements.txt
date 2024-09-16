@@ -2,8 +2,6 @@ pandas
 darts
 streamlit
 plotly
-numpy
-lightgbm 
+numpy 
 yfinance
-xgboost
 joblib
