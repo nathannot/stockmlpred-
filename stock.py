@@ -35,9 +35,9 @@ st.sidebar.write('For advanced users, pick from the following ML models or SARIM
 @st.cache_resource
 def load_model(model_name):
     if model_name == 'XGBoost':
-        model = XGBModel(lags=7, output_chunk_length=4, n_jobs=-1, random_state=42)
+        model = XGBModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
     elif model_name == 'Random Forest (default)':
-        model = RandomForest(lags=7, output_chunk_length=4, n_jobs=-1, random_state=42)
+        model = RandomForest(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
     elif model_name == 'LightGBM':
         model = joblib.load('lgb.pkl')
     elif model_name == 'Linear Regression':
