@@ -8,7 +8,6 @@ import numpy as np
 import datetime
 import plotly.graph_objects as go
 import joblib
-import time
 
 st.header('Stock Price Forecast using Machine Learning')
 st.write('Select from dropdown box which stock to get forecasted prices (pick forecast period below) for these popular US and AUS stocks!')
@@ -17,10 +16,7 @@ stock = st.selectbox('Choose from the following stocks', ('AAPL', 'MSFT', 'AMZN'
 progress_bar = st.progress(0)
 st.write('Some machine learning models may take a while')
 
-# Update the progress bar in increments
-for i in range(100):
-    progress_bar.progress(i + 1)
-    time.sleep(2.05) 
+with st.spinner('Loading... This may take a while'):
     
 current_date = datetime.datetime.today().date()
 
