@@ -86,7 +86,7 @@ try:
 
     # Display forecast table
     st.write(f"Table of {stock}'s {forecast}-day Forecasted Values")
-    table = predx.pd_dataframe()
+    table = predx.pd_dataframe().round(2)
     st.write(table)
 
     st.write('Note this app is for educational purposes, you can compare how these stocks fair to the forecasted values')
