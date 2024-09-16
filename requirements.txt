@@ -5,5 +5,5 @@ plotly
 numpy 
 yfinance
 joblib
-sci-kit learn
+scikit-learn
 lightgbm
