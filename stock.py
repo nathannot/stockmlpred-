@@ -31,13 +31,13 @@ st.sidebar.title('Pick Machine Learning Model')
 st.sidebar.write('For advanced users, pick from the following ML models or SARIMA')
 
 
-if model_name == 'XGBoost (default)':
+if models == 'XGBoost (default)':
     model = XGBModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
-elif model_name == 'Random Forest':
+elif models == 'Random Forest':
     model = RandomForest(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
-elif model_name == 'LightGBM':
+elif models == 'LightGBM':
     model = LightGBMModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
-elif model_name == 'Linear Regression':
+elif models == 'Linear Regression':
     model = LinearRegressionModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
 else:
     model = AutoARIMA(start_p=1, start_q=1, start_P=1, start_Q=1, random_state=42)
