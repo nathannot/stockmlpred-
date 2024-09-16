@@ -35,9 +35,9 @@ st.sidebar.write('For advanced users, pick from the following ML models or SARIM
 # Caching the model training process with stock symbol as a parameter
 @st.cache_resource
 def load_model(stock, model_name):
-    if model_name == 'XGBoost':
+    if model_name == 'XGBoost (default)':
         model = XGBModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
-    elif model_name == 'Random Forest (default)':
+    elif model_name == 'Random Forest':
         model = RandomForest(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
     elif model_name == 'LightGBM':
         model = LightGBMModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
@@ -53,7 +53,7 @@ def load_model(stock, model_name):
 # Sidebar to select model
 models = st.sidebar.selectbox(
     'Choose from the following models', 
-    ('Random Forest (default)', 'XGBoost', 'LightGBM', 'Linear Regression', 'SARIMA'))
+    ('XGBoost (default)','Random Forest',  'LightGBM', 'Linear Regression', 'SARIMA'))
 
 # Load the selected model and train
 model = load_model(stock, models)
