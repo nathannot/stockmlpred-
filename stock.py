@@ -12,43 +12,59 @@ import joblib
 st.header('Stock Price Forecast using Machine Learning')
 st.write('Select from dropdown box which stock to get forecasted prices (pick forecast period below) for these popular US and AUS stocks!')
 
-stock = st.selectbox('Choose from the following stocks', ('AAPL', 'MSFT', 'AMZN', 'GOOGL', 'NVDA', 'TSLA', 'META', 'CBA.AX', 'BHP.AX', 'CSL.AX', 'WBC.AX', 'NAB.AX'))
+stock = st.selectbox('Choose from the following stocks', 
+    ('AAPL', 'MSFT', 'AMZN', 'GOOGL', 'NVDA', 'TSLA', 'META', 'CBA.AX', 'BHP.AX', 'CSL.AX', 'WBC.AX', 'NAB.AX'))
 
 st.write('Some machine learning models may take a while')
 
 current_date = datetime.datetime.today().date()
 
-
+# Load stock data from Yahoo Finance
 df = yf.download(stock, start='2019-01-01', end=current_date).reset_index()
-    
-   
+
+# Transform data using Darts TimeSeries
 data = TimeSeries.from_dataframe(df, time_col='Date', value_cols=['Close'], freq='B')
 fillna = MissingValuesFiller()
 target = fillna.transform(data)
 
+# Sidebar to select model
 st.sidebar.title('Pick Machine Learning Model')
 st.sidebar.write('For advanced users, pick from the following ML models or SARIMA')
 
-# Model selection logic
-models = st.sidebar.selectbox('Choose from the following models', ('Random Forest (default)','XGBoost',  'LightGBM', 'Linear Regression', 'SARIMA'))
-st.sidebar.write('XGBoost was best model in training, but can take a while to load due to sever congestion')
-if models == 'XGBoost':
-    model = XGBModel(lags=7, output_chunk_length=4, n_jobs=-1, random_state=42)
-elif models == 'Random Forest (default)':
-    model = RandomForest(lags=7, output_chunk_length=4, n_jobs=-1, random_state=42)
-elif models == 'LightGBM':
-    model = joblib.load('lgb.pkl')
-elif models == 'Linear Regression':
-    model = joblib.load('lr.pkl')
-else:
-    model = AutoARIMA(start_p=1, start_q=1, start_P=1, start_Q=1, random_state=42)
+# Caching the model training process
+@st.cache_resource
+def load_model(model_name):
+    if model_name == 'XGBoost':
+        model = XGBModel(lags=7, output_chunk_length=4, n_jobs=-1, random_state=42)
+    elif model_name == 'Random Forest (default)':
+        model = RandomForest(lags=7, output_chunk_length=4, n_jobs=-1, random_state=42)
+    elif model_name == 'LightGBM':
+        model = joblib.load('lgb.pkl')
+    elif model_name == 'Linear Regression':
+        model = joblib.load('lr.pkl')
+    else:
+        model = AutoARIMA(start_p=1, start_q=1, start_P=1, start_Q=1, random_state=42)
     
-model.fit(target)
+    # Fit the model (caching fitted model)
+    model.fit(target)
+    return model
+
+# Sidebar to select model
+models = st.sidebar.selectbox(
+    'Choose from the following models', 
+    ('Random Forest (default)', 'XGBoost', 'LightGBM', 'Linear Regression', 'SARIMA'))
+
+# Load the selected model and train
+model = load_model(models)
+
+# User inputs for past data and forecast
+days = st.slider('Pick how many past days to view from last year', min_value=1, max_value=365, value=30)
+forecast = st.slider('Pick Forecast Period (smaller will be more accurate)', min_value=1, max_value=60, value=7)
+
+# Predict future prices
+predx = model.predict(forecast)
 
 # Plot past data and forecast
-days = st.slider('Pick how many past days to view from last year', min_value=1, max_value=365, value=30)
-forecast = st.slider('Pick Forecast Period (smaller will be more accurate)', min_value=1,max_value=60,value=7)
-predx = model.predict(forecast)
 st.write(f"Chart of {stock}'s past {days}-days price and {forecast}-day forecast")
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=target[-days:].pd_dataframe().index, y=target[-days:].pd_dataframe().Close, name=f'Past {days} days'))
@@ -60,5 +76,6 @@ st.plotly_chart(fig)
 st.write(f"Table of {stock}'s {forecast}-day Forecasted Values")
 table = predx.pd_dataframe()
 st.write(table)
+
 st.write('Note this app is for educational purposes, you can compare how these stocks fair to the forecasted values')
 st.write('This app is NOT to be used to make investment decisions')
