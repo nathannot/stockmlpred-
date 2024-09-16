@@ -13,7 +13,7 @@ st.header('Stock Price Forecast using Machine Learning')
 st.write('Select from dropdown box which stock to get forecasted prices (pick forecast period below) for these popular US and AUS stocks!')
 
 stock = st.selectbox('Choose from the following stocks', ('AAPL', 'MSFT', 'AMZN', 'GOOGL', 'NVDA', 'TSLA', 'META', 'CBA.AX', 'BHP.AX', 'CSL.AX', 'WBC.AX', 'NAB.AX'))
-progress_bar = st.progress(0)
+
 st.write('Some machine learning models may take a while')
 
 with st.spinner('Loading... This may take a while'):
