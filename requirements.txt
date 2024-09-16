@@ -3,5 +3,6 @@ darts
 streamlit
 plotly
 numpy
-
+lightgbm 
 yfinance
+xgboost
