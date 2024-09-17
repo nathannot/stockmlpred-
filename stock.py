@@ -37,18 +37,16 @@ try:
     st.sidebar.write('For advanced users, pick from the following ML models or SARIMA')
     # Calculate the current date inside the function for daily data update
     current_date = datetime.datetime.today().date()
+    # Load stock data from Yahoo Finance with up-to-date current date
+    df = yf.download(stock, start='2019-01-01', end=current_date).reset_index()
 
+    # Transform data using Darts TimeSeries
+    data = TimeSeries.from_dataframe(df, time_col='Date', value_cols=['Close'], freq='B')
+    fillna = MissingValuesFiller()
+    target = fillna.transform(data)
     # Caching the model training process with stock symbol as a parameter
     @st.cache_resource
     def load_model(stock, model_name):
-        
-        # Load stock data from Yahoo Finance with up-to-date current date
-        df = yf.download(stock, start='2019-01-01', end=current_date).reset_index()
-
-        # Transform data using Darts TimeSeries
-        data = TimeSeries.from_dataframe(df, time_col='Date', value_cols=['Close'], freq='B')
-        fillna = MissingValuesFiller()
-        target = fillna.transform(data)
 
         # Initialize the selected model
         if model_name == 'XGBoost (default)':
