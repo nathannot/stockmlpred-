@@ -4,7 +4,6 @@ from darts import TimeSeries
 from darts.models import XGBModel, RandomForest, LightGBMModel, LinearRegressionModel, AutoARIMA
 from darts.dataprocessing.transformers import MissingValuesFiller
 import pandas as pd
-import numpy as np
 import datetime
 import plotly.graph_objects as go
 
@@ -15,39 +14,49 @@ st.write('Select from the dropdown box to get forecasted prices!')
 # Sidebar for stock selection
 st.sidebar.title('Pick the Machine Learning Model or Input Stock Code')
 
+# Initialize session state for stock symbol if it doesn't exist
+if 'stock' not in st.session_state:
+    st.session_state.stock = 'AAPL'  # Default stock
+
 # Option for predefined popular stocks
-predefined_stock = st.selectbox('Choose from the following popular stocks', 
-    ('AAPL', 'MSFT', 'AMZN', 'GOOGL', 'NVDA', 'TSLA', 'META', 'CBA.AX', 'BHP.AX', 'CSL.AX', 'WBC.AX', 'NAB.AX'))
+predefined_stock = st.selectbox(
+    'Choose from the following popular stocks',
+    ('AAPL', 'MSFT', 'AMZN', 'GOOGL', 'NVDA', 'TSLA', 'META', 'CBA.AX', 'BHP.AX', 'CSL.AX', 'WBC.AX', 'NAB.AX'),
+    index=('AAPL', 'MSFT', 'AMZN', 'GOOGL', 'NVDA', 'TSLA', 'META', 'CBA.AX', 'BHP.AX', 'CSL.AX', 'WBC.AX', 'NAB.AX').index(st.session_state.stock)
+    if st.session_state.stock in ('AAPL', 'MSFT', 'AMZN', 'GOOGL', 'NVDA', 'TSLA', 'META', 'CBA.AX', 'BHP.AX', 'CSL.AX', 'WBC.AX', 'NAB.AX')
+    else 0
+)
 
 # Option for custom stock input
-user_stock = st.sidebar.text_input('Enter your own stock code if you know it (e.g., AAPL for Apple, TSLA for Tesla):')
-st.sidebar.write('Note: Does not work for crypto, only business day financial instruments.')
-
-# If user enters a custom stock symbol, prioritize it over predefined stocks
-if st.sidebar.button('Use Custom Stock') and user_stock:
-    stock = user_stock
+user_stock = st.sidebar.text_input('Enter your own stock code (e.g., AAPL for Apple, TSLA for Tesla):')
+st.sidebar.write('Clear the textbox to pick from dropdown menu again')
+# Custom stock entry prioritization
+if user_stock:
+    st.session_state.stock = user_stock  # Set custom stock if entered
 else:
-    stock = predefined_stock
+    st.session_state.stock = predefined_stock  # Otherwise, use the predefined stock
 
-st.write('Some machine learning models may take a while')
+# Display which stock is currently selected
+stock = st.session_state.stock
+st.write(f'Currently selected stock: {stock}')
 
 # Error handling for invalid stock symbols
 try:
-    # Sidebar for machine learning model selection
-    st.sidebar.write('For advanced users, pick from the following ML models or SARIMA')
-    # Calculate the current date inside the function for daily data update
+    st.write('Some machine learning models may take a while')
+    
+    # Calculate the current date
     current_date = datetime.datetime.today().date()
-    # Load stock data from Yahoo Finance with up-to-date current date
+    # Load stock data from Yahoo Finance
     df = yf.download(stock, start='2019-01-01', end=current_date).reset_index()
 
     # Transform data using Darts TimeSeries
     data = TimeSeries.from_dataframe(df, time_col='Date', value_cols=['Close'], freq='B')
     fillna = MissingValuesFiller()
     target = fillna.transform(data)
-    # Caching the model training process with stock symbol as a parameter
+
+    # Caching the model training process
     @st.cache_resource
     def load_model(stock, model_name):
-
         # Initialize the selected model
         if model_name == 'XGBoost (default)':
             model = XGBModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
