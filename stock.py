@@ -35,13 +35,13 @@ st.write('Some machine learning models may take a while')
 try:
     # Sidebar for machine learning model selection
     st.sidebar.write('For advanced users, pick from the following ML models or SARIMA')
+    # Calculate the current date inside the function for daily data update
+    current_date = datetime.datetime.today().date()
 
     # Caching the model training process with stock symbol as a parameter
     @st.cache_resource
     def load_model(stock, model_name):
-        # Calculate the current date inside the function for daily data update
-        current_date = datetime.datetime.today().date()
-
+        
         # Load stock data from Yahoo Finance with up-to-date current date
         df = yf.download(stock, start='2019-01-01', end=current_date).reset_index()
 
