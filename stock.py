@@ -56,7 +56,7 @@ try:
 
     # Caching the model training process
     @st.cache_resource
-    def load_model(stock, model_name):
+    def load_model(stock, model_name,current_date):
         # Initialize the selected model
         if model_name == 'XGBoost (default)':
             model = XGBModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
@@ -85,7 +85,7 @@ try:
     st.sidebar.write('Choosing from the different models can be used for research purposes to determine effectiveness of machine learning vs classical models')
 
     # Load the selected model and train it with the corresponding stock data
-    model = load_model(stock, models)
+    model = load_model(stock, models,current_date)
 
     # User input sliders for number of past days and forecast period
     days = st.slider('Pick how many past days to view from last year', min_value=1, max_value=365, value=30)
