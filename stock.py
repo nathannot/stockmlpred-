@@ -28,7 +28,7 @@ predefined_stock = st.selectbox(
 )
 
 # Option for custom stock input
-user_stock = st.sidebar.text_input('Enter your own stock code (e.g., AAPL for Apple, TSLA for Tesla):')
+user_stock = st.sidebar.text_input('Enter your own stock code (check Yahoo Finance for code of your desired stock):')
 st.sidebar.write('Clear the textbox to pick from dropdown menu again')
 # Custom stock entry prioritization
 if user_stock:
