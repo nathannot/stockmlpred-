@@ -1,7 +1,7 @@
 import streamlit as st
 import yfinance as yf
 from darts import TimeSeries
-from darts.models import XGBModel, RandomForest, LightGBMModel, LinearRegressionModel, AutoARIMA
+from darts.models import XGBModel, KalmanForecaster, ExponentialSmoothing, RandomForest, LightGBMModel, LinearRegressionModel, AutoARIMA
 from darts.dataprocessing.transformers import MissingValuesFiller
 import pandas as pd
 import datetime
@@ -66,6 +66,10 @@ try:
             model = LightGBMModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
         elif model_name == 'Linear Regression':
             model = LinearRegressionModel(lags=7, output_chunk_length=4, n_jobs=2, random_state=42)
+        elif model_name == 'Kalman Filter Forecaster':
+            model = KalmanForecaster(dim_x=2)
+        elif model_name == 'Exponential Smoothing':
+            model = ExponentialSmoothing()
         else:
             model = AutoARIMA(start_p=1, start_q=1, start_P=1, start_Q=1, random_state=42)
 
@@ -76,8 +80,9 @@ try:
     # Sidebar to select model
     models = st.sidebar.selectbox(
         'Choose from the following models', 
-        ('XGBoost (default)', 'Random Forest', 'LightGBM', 'Linear Regression', 'SARIMA')
+        ('XGBoost (default)', 'Random Forest', 'LightGBM', 'Linear Regression','Kalman Filter Forecaster','Exponential Smoothing', 'SARIMA')
     )
+    st.sidebar.write('Choosing from the different models can be used for research purposes to determine effectiveness of machine learning vs classical models')
 
     # Load the selected model and train it with the corresponding stock data
     model = load_model(stock, models)
