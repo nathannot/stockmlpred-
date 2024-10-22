@@ -7,3 +7,5 @@ yfinance
 joblib
 scikit-learn
 lightgbm
+torch==2.4.0
+
