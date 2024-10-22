@@ -1,5 +1,5 @@
 pandas
-darts
+darts == 0.30.0
 streamlit
 plotly
 numpy 
